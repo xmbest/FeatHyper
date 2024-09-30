@@ -20,13 +20,26 @@ android {
         }
     }
 
+    signingConfigs{
+        create("hyperos"){
+            storeFile = file("../sign/featHyper")
+            storePassword = "hyperos"
+            keyAlias = "hyperos"
+            keyPassword = "hyperos"
+        }
+    }
+
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs["hyperos"]
+        }
+        debug {
+            signingConfig = signingConfigs["hyperos"]
         }
     }
     compileOptions {
