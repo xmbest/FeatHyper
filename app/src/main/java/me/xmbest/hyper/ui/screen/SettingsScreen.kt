@@ -27,13 +27,12 @@ fun SettingsScreen(navController: NavHostController?) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)
     ) {
         Text(
             text = stringResource(id = R.string.system_settings),
             fontWeight = FontWeight.Bold,
             fontSize = TextUnit(24f, TextUnitType.Sp),
-            modifier = Modifier.padding(10.dp)
+            modifier = Modifier.padding(start = 20.dp, top = 10.dp, bottom = 10.dp)
         )
         RouterCons.getSettingsList().forEach {
             ListItem(
@@ -48,7 +47,7 @@ fun SettingsScreen(navController: NavHostController?) {
                     .clickable {
                         navController?.navigate(it.second)
                     }
-                    .padding(start = 5.dp)
+                    .padding(start = 10.dp, end = 10.dp, bottom = 5.dp)
             )
         }
     }

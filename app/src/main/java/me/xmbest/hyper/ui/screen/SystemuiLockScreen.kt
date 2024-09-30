@@ -25,17 +25,17 @@ fun SystemuiLockScreen(navController: NavHostController,viewModel: SystemuiLockV
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)
     ) {
         Text(
             text = stringResource(id = R.string.systemui_lock),
             fontWeight = FontWeight.Bold,
             fontSize = TextUnit(24f, TextUnitType.Sp),
-            modifier = Modifier.padding(bottom = 10.dp).clickable {
+            modifier = Modifier.padding(top = 10.dp, start = 20.dp, bottom = 5.dp).clickable {
                 navController.popBackStack()
             }
         )
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 10.dp)) {
+
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 20.dp, bottom = 10.dp)) {
             Text(stringResource(R.string.system_systemui_enable_lock_show_sim), modifier = Modifier.clickable {
                 viewModel.updateLockShowSimName(!viewModel.enableLockShowSimName.value)
             })

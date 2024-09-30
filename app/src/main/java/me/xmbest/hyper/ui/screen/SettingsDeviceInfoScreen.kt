@@ -39,17 +39,16 @@ fun SettingsDeviceInfoScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)
     ) {
         Text(
             text = stringResource(id = R.string.device_info_edit),
             fontWeight = FontWeight.Bold,
             fontSize = TextUnit(24f, TextUnitType.Sp),
-            modifier = Modifier.padding(bottom = 10.dp).clickable {
+            modifier = Modifier.padding(start = 20.dp, bottom = 10.dp, top = 10.dp).clickable {
                 navController.popBackStack()
             }
         )
-        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 10.dp)) {
+        Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(start = 20.dp, end = 10.dp, bottom = 5.dp)) {
             Text(stringResource(R.string.enable), modifier = Modifier.clickable {
                 viewModel.updateDeviceEditState(!viewModel.enable.value)
             })
@@ -63,7 +62,7 @@ fun SettingsDeviceInfoScreen(
                 viewModel.updateDeviceNameValue(it)
             },
             label = { Text(text = SettingsCons.deviceName.second) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth().padding(10.dp)
         )
 
         SettingsCons.deviceInfoMap.forEach { map ->
@@ -81,7 +80,7 @@ fun SettingsDeviceInfoScreen(
                     SPUtils.setString(map.value, it)
                 }, label = { Text(text = map.key) }, modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 10.dp)
+                    .padding(start = 10.dp, end = 10.dp, bottom = 10.dp)
             )
         }
     }

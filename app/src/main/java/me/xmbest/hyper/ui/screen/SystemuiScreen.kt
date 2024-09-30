@@ -25,13 +25,12 @@ fun SystemuiScreen(navController: NavHostController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(10.dp)
     ) {
         Text(
             text = stringResource(id = R.string.system_systemui),
             fontWeight = FontWeight.Bold,
             fontSize = TextUnit(24f, TextUnitType.Sp),
-            modifier = Modifier.padding(10.dp)
+            modifier = Modifier.padding(start = 20.dp, bottom = 10.dp, top = 10.dp)
         )
         RouterCons.getSystemUiList().forEach {
             ListItem(
@@ -46,7 +45,7 @@ fun SystemuiScreen(navController: NavHostController) {
                     .clickable {
                         navController.navigate(it.second)
                     }
-                    .padding(start = 5.dp)
+                    .padding(start = 10.dp, end = 10.dp, bottom = 5.dp)
             )
         }
     }
