@@ -2,11 +2,13 @@
     <string name="app_name">Feat HyperOS</string>
     <string name="app_list">支持应用列表</string>
     <string name="device_info_edit">设备信息编辑</string>
-    <string name="open">启用</string>
+    <string name="enable">启用</string>
     <string name="home">主页</string>
 
     <string name="systemui_lock">锁屏</string>
     <string name="system_settings">系统设置</string>
+    <string name="system_systemui">用户界面</string>
+    <string name="system_systemui_enable_lock_show_sim">锁屏显示运营商名称</string>
     <string name="settings_device_info">设备信息</string>
     <string name="systemui_status_bar">状态栏</string>
 </resources>

@@ -50,10 +50,10 @@ fun SettingsDeviceInfoScreen(
             }
         )
         Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(bottom = 10.dp)) {
-            Text(stringResource(R.string.open), modifier = Modifier.clickable {
-                viewModel.updateDeviceEditState(!viewModel.open.value)
+            Text(stringResource(R.string.enable), modifier = Modifier.clickable {
+                viewModel.updateDeviceEditState(!viewModel.enable.value)
             })
-            Switch(checked = viewModel.open.value, onCheckedChange = {
+            Switch(checked = viewModel.enable.value, onCheckedChange = {
                 viewModel.updateDeviceEditState(it)
             }, modifier = Modifier.padding(start = 10.dp))
         }

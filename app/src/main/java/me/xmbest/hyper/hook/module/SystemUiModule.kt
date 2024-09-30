@@ -22,6 +22,7 @@ import me.xmbest.hyper.base.BaseModule
     /**
      * 显示锁屏运营商名称
      * @param lpParam XC_LoadPackage.LoadPackageParam 提供 classLoader
+     * @see <a href="https://www.coolapk.com/feed/57865578">锁屏显示状态栏</a>
      */
     @HookMethod(SystemUiCons.LOCK_SHOW_SIM_NAME,false)
     fun showLockSimCardName(lpParam: XC_LoadPackage.LoadPackageParam){

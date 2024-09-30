@@ -1,8 +1,5 @@
 package me.xmbest.hyper.cons
 
-import me.xmbest.hyper.R
-import me.xmbest.hyper.utils.ResUtils
-
 /**
  * com.android.systemui常量
  * @author xmbest

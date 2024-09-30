@@ -16,7 +16,7 @@ class SettingsDeviceInfoViewModule : BaseViewModule() {
     /**
      * 是否开启
      */
-    val open = mutableStateOf(SPUtils.getBoolean(SettingsCons.EDIT_DEVICE_INFO,false))
+    val enable = mutableStateOf(SPUtils.getBoolean(SettingsCons.EDIT_DEVICE_INFO,false))
 
     /**
      * 更新设备名称
@@ -30,7 +30,7 @@ class SettingsDeviceInfoViewModule : BaseViewModule() {
      * 更新开关状态
      */
     fun updateDeviceEditState(value: Boolean){
-        open.value = value
+        enable.value = value
         SPUtils.setBoolean(SettingsCons.EDIT_DEVICE_INFO,value)
     }
 }

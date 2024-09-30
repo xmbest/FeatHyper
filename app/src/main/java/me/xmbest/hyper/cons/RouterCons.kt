@@ -6,6 +6,7 @@ import me.xmbest.hyper.R
 import me.xmbest.hyper.ui.screen.HomeScreen
 import me.xmbest.hyper.ui.screen.SettingsDeviceInfoScreen
 import me.xmbest.hyper.ui.screen.SettingsScreen
+import me.xmbest.hyper.ui.screen.SystemuiLockScreen
 import me.xmbest.hyper.ui.screen.SystemuiScreen
 import me.xmbest.hyper.utils.ResUtils
 
@@ -22,6 +23,11 @@ class RouterCons {
          * 状态栏设置
          */
         private const val SYSTEMUI = "com.android.systemui"
+
+        /**
+         * 状态栏-锁屏
+         */
+        private const val SYSTEMUI_LOCK = "SYSTEMUI_LOCK"
 
         /**
          * 系统设置
@@ -41,6 +47,7 @@ class RouterCons {
             return listOf(
                 RouterPage(HOME) { HomeScreen(navController) },
                 RouterPage(SYSTEMUI) { SystemuiScreen(navController) },
+                RouterPage(SYSTEMUI_LOCK) { SystemuiLockScreen(navController) },
                 RouterPage(SETTINGS) { SettingsScreen(navController) },
                 RouterPage(SETTINGS_DEVICE_INFO) { SettingsDeviceInfoScreen(navController) })
         }
@@ -51,6 +58,15 @@ class RouterCons {
         fun getSettingsList(): List<Pair<String, String>> {
             return listOf(
                 Pair(ResUtils.getString(R.string.settings_device_info), SETTINGS_DEVICE_INFO)
+            )
+        }
+
+        /**
+         * systemui 列表
+         */
+        fun getSystemUiList(): List<Pair<String, String>> {
+            return listOf(
+                Pair(ResUtils.getString(R.string.systemui_lock), SYSTEMUI_LOCK)
             )
         }
     }
