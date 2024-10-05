@@ -41,9 +41,29 @@ class SettingsCons {
         )
 
         /**
+         * 设置设备信息可能直接调用com.android.settings.device.BaseDeviceCardItem#setValue(CharSequence)
+         */
+        fun getDeviceInfoMapKey(arg1: String): String {
+            if (arg1.contains("+") && arg1.contains("GB")) {
+                return "运行内存"
+            } else if (arg1.contains("mAh")) {
+                return "电池容量"
+            } else if (arg1.contains("*")) {
+                return "分辨率"
+            } else if (arg1.contains("″")) {
+                return "屏幕尺寸"
+            } else if (arg1.contains("平台")) {
+                return "处理器"
+            } else if (arg1.contains("MP")) {
+                return "摄像头"
+            }
+            return ""
+        }
+
+        /**
          * 手机设备名称
          */
-        val deviceName = Pair(EDIT_DEVICE_NAME_VALUE,"设备名称")
+        val deviceName = Pair(EDIT_DEVICE_NAME_VALUE, "设备名称")
 
 
     }

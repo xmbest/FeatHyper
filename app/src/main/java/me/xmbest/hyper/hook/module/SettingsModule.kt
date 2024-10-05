@@ -53,6 +53,34 @@ class SettingsModule : BaseModule() {
             lpParam.classLoader
         )
 
+        XposedHelpers.findAndHookMethod("com.android.settings.device.BaseDeviceCardItem",
+            lpParam.classLoader, "setValue",
+            CharSequence::class.java,
+            object : XC_MethodHook() {
+                override fun beforeHookedMethod(param: MethodHookParam?) {
+                    super.beforeHookedMethod(param)
+                    Log.d(TAG, "setValue String beforeHookedMethod: ")
+                    param?.let {
+                        param.args?.let {
+                            if (it.isNotEmpty()) {
+                                val key =
+                                    SettingsCons.getDeviceInfoMapKey(it[0].toString())
+                                if (key.isNotEmpty()) {
+                                    val value = XSPUtils.getString(
+                                        SettingsCons.deviceInfoMap[key],
+                                        ""
+                                    )
+                                    if (value.isNotEmpty()) {
+                                        it[0] = value
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            })
+
+
         XposedHelpers.findAndHookMethod(
             "com.android.settings.device.BaseDeviceCardItem",
             lpParam.classLoader,
@@ -61,7 +89,7 @@ class SettingsModule : BaseModule() {
             object : XC_MethodHook() {
                 override fun beforeHookedMethod(param: MethodHookParam?) {
                     super.beforeHookedMethod(param)
-                    Log.d(TAG, "setValue beforeHookedMethod: ")
+                    Log.d(TAG, "setValue DeviceCardInfo beforeHookedMethod: ")
                     param?.let {
                         it.args?.let { arg ->
                             if (arg.isNotEmpty()) {
@@ -88,8 +116,9 @@ class SettingsModule : BaseModule() {
                                     "key = $key title = $title title2 = $title2 value = $value firstValue = $firstValue secondValue = $secondValue"
                                 )
                                 if (SettingsCons.deviceInfoMap.keys.contains(title)) {
-                                    val result =  XSPUtils.getString(SettingsCons.deviceInfoMap[title], "")
-                                    Log.d(TAG,"result = $result")
+                                    val result =
+                                        XSPUtils.getString(SettingsCons.deviceInfoMap[title], "")
+                                    Log.d(TAG, "result = $result")
 
                                     if (result.isNotBlank()) {
                                         setValue.invoke(arg[0], result)
