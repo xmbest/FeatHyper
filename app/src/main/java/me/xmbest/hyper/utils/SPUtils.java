@@ -31,14 +31,16 @@ public class SPUtils {
      * @param context
      */
     @SuppressLint("WorldReadableFiles")
-    public void init(Context context) {
+    public boolean init(Context context) {
         try {
             Log.d(TAG,"set Context.MODE_WORLD_READABLE");
             // MODE_WORLD_READABLE 过时了,如果没有在xposed中被启用会crash
             sp = context.getSharedPreferences(mPrefsName, Context.MODE_WORLD_READABLE);
+            return true;
         }catch (Exception e){
-            Log.d(TAG,"set Context.MODE_PRIVATE");
-            sp = context.getSharedPreferences(mPrefsName,Context.MODE_PRIVATE);
+            Log.d(TAG,"e.message = " + e.getMessage());
+//            sp = context.getSharedPreferences(mPrefsName,Context.MODE_PRIVATE);
+            return false;
         }
     }
 
