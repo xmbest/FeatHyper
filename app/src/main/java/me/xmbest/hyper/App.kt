@@ -2,7 +2,6 @@ package me.xmbest.hyper
 
 import android.annotation.SuppressLint
 import android.app.Application
-import me.xmbest.hyper.utils.SPUtils
 
 class App : Application() {
     companion object {
@@ -15,11 +14,6 @@ class App : Application() {
     override fun onCreate() {
         super.onCreate()
         sInstance = this
-        init()
-    }
-
-    private fun init(){
-        SPUtils.getInstance().init(this)
     }
 
 }
