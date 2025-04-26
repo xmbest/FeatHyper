@@ -56,15 +56,6 @@ fun SettingsDeviceInfoScreen(
                 viewModel.updateDeviceEditState(it)
             }, modifier = Modifier.padding(start = 10.dp))
         }
-        TextField(
-            value = viewModel.deviceName.value,
-            onValueChange = {
-                viewModel.updateDeviceNameValue(it)
-            },
-            label = { Text(text = SettingsCons.deviceName.second) },
-            modifier = Modifier.fillMaxWidth().padding(10.dp)
-        )
-
         SettingsCons.deviceInfoMap.forEach { map ->
             var currentValue by rememberSaveable {
                 mutableStateOf(
