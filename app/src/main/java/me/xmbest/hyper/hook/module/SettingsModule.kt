@@ -47,6 +47,21 @@ class SettingsModule : BaseModule() {
             )
         }
 
+        // OS版本
+        XposedHelpers.findAndHookMethod("com.android.settings.device.MiuiAboutPhoneUtils",
+            lpParam.classLoader,
+            "getOsVersionCode",
+            object : XC_MethodHook() {
+                override fun afterHookedMethod(param: MethodHookParam?) {
+                    Log.d(TAG, "MiuiAboutPhoneUtils.getOsVersionCode.afterHookedMethod")
+                    super.afterHookedMethod(param)
+                    XSPUtils.getString(SettingsCons.deviceInfoMap[SettingsCons.MIUI_VERSION], "").let {
+                        if (it.isNotEmpty()) param?.result = it
+                    }
+                }
+            }
+        )
+
         // 设备信息
         val clazz = XposedHelpers.findClass(
             "com.android.settings.device.DeviceCardInfo",
@@ -73,6 +88,7 @@ class SettingsModule : BaseModule() {
                                     if (value.isNotEmpty()) {
                                         it[0] = value
                                     }
+                                    Log.d(TAG, "key = $key , value = $value")
                                 }
                             }
                         }
