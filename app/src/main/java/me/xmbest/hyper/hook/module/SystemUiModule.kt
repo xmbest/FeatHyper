@@ -18,14 +18,17 @@ import me.xmbest.hyper.base.BaseModule
  * @date 2024/09/13
  */
 @HookModule("com.android.systemui")
- class SystemUiModule : BaseModule() {
+class SystemUiModule : BaseModule() {
+
+    override val TAG = "SystemUiModule"
+
     /**
      * 显示锁屏运营商名称
      * @param lpParam XC_LoadPackage.LoadPackageParam 提供 classLoader
      * @see <a href="https://www.coolapk.com/feed/57865578">锁屏显示状态栏</a>
      */
-    @HookMethod(SystemUiCons.LOCK_SHOW_SIM_NAME,false)
-    fun showLockSimCardName(lpParam: XC_LoadPackage.LoadPackageParam){
+    @HookMethod(SystemUiCons.LOCK_SHOW_SIM_NAME, false)
+    fun showLockSimCardName(lpParam: XC_LoadPackage.LoadPackageParam) {
         logD("showLockSimCardName")
         XposedHelpers.findAndHookMethod(
             "com.android.systemui.statusbar.phone.KeyguardStatusBarView",
@@ -41,8 +44,8 @@ import me.xmbest.hyper.base.BaseModule
                         val labelResId: Int = view.resources
                             .getIdentifier("keyguard_carrier_text", "id", "com.android.systemui")
                         val tv = view.findViewById<TextView>(labelResId)
-                        Log.d(TAG,"tv.text = " + tv.text)
-                        if (tv.text.contains("|")){
+                        Log.d(TAG, "tv.text = " + tv.text)
+                        if (tv.text.contains("|")) {
                             tv.text = tv.text.split("|")[0]
                         }
                         tv.visibility = View.VISIBLE

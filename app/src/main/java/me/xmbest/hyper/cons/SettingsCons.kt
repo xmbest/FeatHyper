@@ -67,7 +67,7 @@ class SettingsCons {
                 arg1.contains("+") && arg1.contains("GB") -> MEMORY
                 arg1.contains("mAh") -> BATTERY
                 arg1.contains("*") || arg1.contains("x") -> SCREEN_RESOLUTION
-                arg1.contains("″") -> SCREEN_SIZE
+                arg1.contains("""(英寸|″)""".toRegex())  -> SCREEN_SIZE
                 arg1.contains("""(平台|澎湃|高通|天玑|骁龙)""".toRegex()) -> CPU
                 arg1.contains("MP") -> CAMERA
                 arg1.contains("""(Xiaomi|REDMI|XIAOMI|Redmi)""".toRegex()) -> deviceName.second
