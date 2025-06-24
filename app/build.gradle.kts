@@ -16,8 +16,8 @@ android {
         applicationId = "me.xmbest.hyper"
         minSdk = 33
         targetSdk = 33
-        versionCode = 100_000_004
-        versionName = "1.0.4"
+        versionCode = 100_000_005
+        versionName = "1.0.5"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
