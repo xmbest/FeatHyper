@@ -35,6 +35,7 @@ class SettingsCons {
         private const val SCREEN_SIZE = "屏幕尺寸"
         const val MIUI_VERSION = "OS版本"
         private const val CAMERA = "摄像头"
+        private const val BASEBAND = "基带"
 
         /**
          * 设备信息键值对
@@ -55,7 +56,8 @@ class SettingsCons {
             SCREEN_RESOLUTION to "com_android_settings_device_screen_resolution",
             SCREEN_SIZE to "com_android_settings_device_screen_size",
             MIUI_VERSION to "com_android_settings_device_miui_version",
-            CAMERA to "com_android_settings_device_camera"
+            CAMERA to "com_android_settings_device_camera",
+            BASEBAND to "com_android_settings_device_baseband",
         )
 
         /**
@@ -69,6 +71,7 @@ class SettingsCons {
                 arg1.contains("*") || arg1.contains("x") -> SCREEN_RESOLUTION
                 arg1.contains("""(英寸|″)""".toRegex())  -> SCREEN_SIZE
                 arg1.contains("""(平台|澎湃|高通|天玑|骁龙)""".toRegex()) -> CPU
+                arg1.contains("MPSS") -> BASEBAND
                 arg1.contains("MP") -> CAMERA
                 arg1.contains("""(Xiaomi|REDMI|XIAOMI|Redmi)""".toRegex()) -> deviceName.second
                 arg1.contains("""^\d+\.\d+\.\d+\.\d+\.\S+""".toRegex()) -> MIUI_VERSION
