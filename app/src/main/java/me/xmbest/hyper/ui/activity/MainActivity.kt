@@ -13,13 +13,12 @@ import androidx.compose.ui.Modifier
 import me.xmbest.hyper.R
 import me.xmbest.hyper.ui.Router
 import me.xmbest.hyper.ui.theme.FeatHyperTheme
-import me.xmbest.hyper.utils.ResUtils
 import me.xmbest.hyper.utils.SPUtils
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initSp()
+        if (!initSp()) return
         enableEdgeToEdge()
         setContent {
             FeatHyperTheme {
@@ -31,15 +30,16 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-
     /**
      * 初始化SharedPreferences
+     * @return true 初始化成功，false 初始化失败
      */
-    private fun initSp(){
-        val initSpSuccess = SPUtils.getInstance().init(this)
-        if (!initSpSuccess){
-            Toast.makeText(ResUtils.getInstance(),ResUtils.getString(R.string.disable_xposed_tips),Toast.LENGTH_LONG).show()
+    private fun initSp(): Boolean {
+        val initSpSuccess = SPUtils.init(this)
+        if (!initSpSuccess) {
+            Toast.makeText(this, R.string.disable_xposed_tips, Toast.LENGTH_LONG).show()
             finish()
         }
+        return initSpSuccess
     }
 }

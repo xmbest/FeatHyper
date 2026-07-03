@@ -4,10 +4,11 @@ import android.content.Context
 import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
+import android.util.Log
 import dalvik.system.DexFile
 import me.xmbest.hyper.App
+import me.xmbest.hyper.BuildConfig
 import me.xmbest.hyper.annotations.HookModule
-import java.io.IOException
 
 /**
  * 应用工具类
@@ -15,59 +16,53 @@ import java.io.IOException
  * @date 2024/09/23
  */
 class AppUtils {
-    companion object{
-        private val sPackageManager: PackageManager = App.sInstance!!.packageManager
+    companion object {
+        private const val TAG = "AppUtils"
 
-        fun getApplicationNameAndIcon( packageName: String): Pair<String, Drawable?>? {
-            // 通过包名来获取应用信息
+        private val sPackageManager: PackageManager by lazy {
+            App.sInstance.packageManager
+        }
+
+        fun getApplicationNameAndIcon(packageName: String): Pair<String, Drawable?>? {
             val applicationInfo: ApplicationInfo? = try {
                 sPackageManager.getApplicationInfo(packageName, 0)
             } catch (e: PackageManager.NameNotFoundException) {
-                // 如果找不到应用，则返回空值
                 return null
             }
 
             return applicationInfo?.let {
-                // 获取应用的名字
                 val appName = sPackageManager.getApplicationLabel(applicationInfo).toString()
-
-                // 获取应用的图标
                 val appIcon = sPackageManager.getApplicationIcon(applicationInfo)
-
                 Pair(appName, appIcon)
             }
         }
 
         fun getClassesInPackage(packageName: String, context: Context): List<String> {
             val packageNameList = mutableListOf<String>()
+            var dexFile: DexFile? = null
             try {
-                // 获取应用程序的APK路径
                 val applicationInfo = context.packageManager.getApplicationInfo(context.packageName, 0)
                 val sourceDir = applicationInfo.sourceDir
-                val dexFile = DexFile(sourceDir)
-
-                // 遍历dex文件中的所有类
+                dexFile = DexFile(sourceDir)
                 for (entry in dexFile.entries()) {
-                    if (entry.contains(packageName)) {
-                        // 尝试加载类
-                        try {
-                            if (entry.contains("$")) continue
+                    if (entry.contains(packageName) && !entry.contains("$")) {
+                        runCatching {
                             val clazz = Class.forName(entry)
                             val annotation = clazz.getAnnotation(HookModule::class.java)
                             annotation?.let {
-                                packageNameList.add(annotation.packageName)
+                                packageNameList.add(it.packageName)
                             }
-                        } catch (e: ClassNotFoundException) {
-                            e.printStackTrace()
+                        }.onFailure { e ->
+                            if (BuildConfig.DEBUG) Log.e(TAG, "Failed to load class: $entry", e)
                         }
                     }
                 }
-            } catch (e: IOException) {
-                e.printStackTrace()
+            } catch (e: Exception) {
+                if (BuildConfig.DEBUG) Log.e(TAG, "Failed to read classes from package", e)
+            } finally {
+                runCatching { dexFile?.close() }
             }
-
             return packageNameList
         }
-
     }
 }

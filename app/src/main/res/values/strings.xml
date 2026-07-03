@@ -12,4 +12,5 @@
     <string name="system_systemui_enable_lock_show_sim">锁屏显示运营商名称</string>
     <string name="settings_device_info">设备信息</string>
     <string name="systemui_status_bar">状态栏</string>
+    <string name="more">更多</string>
 </resources>

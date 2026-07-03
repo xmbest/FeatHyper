@@ -1,39 +1,42 @@
-package me.xmbest.hyper.utils;
+package me.xmbest.hyper.utils
 
-import de.robv.android.xposed.XSharedPreferences;
+import de.robv.android.xposed.XSharedPreferences
 
-public class XSPUtils {
-
-    public static XSharedPreferences xsp;
+/**
+ * XSharedPreferences 工具类
+ * 用于 Xposed 模块侧跨进程读取 SharedPreferences
+ */
+object XSPUtils {
+    private var xsp: XSharedPreferences? = null
 
     /**
      * 初始化
-     *
      * @param packageName 包名
+     * @param filename SharedPreferences 文件名
      */
-    public static void initXSP(String packageName,String filename) {
-        if (xsp == null){
-            xsp = new XSharedPreferences(packageName,filename);
+    fun initXSP(packageName: String, filename: String) {
+        if (xsp == null) {
+            xsp = XSharedPreferences(packageName, filename)
         }
     }
 
-    public static boolean getBoolean(String key, boolean def) {
-        return xsp.getBoolean(key, def);
+    fun getBoolean(key: String?, def: Boolean): Boolean {
+        return xsp?.getBoolean(key, def) ?: def
     }
 
-    public static String getString(String key, String def) {
-        return xsp.getString(key, def);
+    fun getString(key: String?, def: String): String {
+        return xsp?.getString(key, def) ?: def
     }
 
-    public static int getInt(String key, int def) {
-        return xsp.getInt(key, def);
+    fun getInt(key: String?, def: Int): Int {
+        return xsp?.getInt(key, def) ?: def
     }
 
-    public static float getFloat(String key, float def) {
-        return xsp.getFloat(key, def);
+    fun getFloat(key: String?, def: Float): Float {
+        return xsp?.getFloat(key, def) ?: def
     }
 
-    public static long getLong(String key, long def) {
-        return xsp.getLong(key, def);
+    fun getLong(key: String?, def: Long): Long {
+        return xsp?.getLong(key, def) ?: def
     }
 }

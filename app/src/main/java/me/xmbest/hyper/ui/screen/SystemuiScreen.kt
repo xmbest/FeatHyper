@@ -1,52 +1,16 @@
 package me.xmbest.hyper.ui.screen
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
-import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
-import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import me.xmbest.hyper.R
 import me.xmbest.hyper.cons.RouterCons
+import me.xmbest.hyper.ui.widget.ListNavigationScreen
 
 @Composable
-fun SystemuiScreen(navController: NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        Text(
-            text = stringResource(id = R.string.system_systemui),
-            fontWeight = FontWeight.Bold,
-            fontSize = TextUnit(24f, TextUnitType.Sp),
-            modifier = Modifier.padding(start = 20.dp, bottom = 10.dp, top = 10.dp)
-        )
-        RouterCons.getSystemUiList().forEach {
-            ListItem(
-                headlineContent = {},
-                supportingContent = {
-                    Text(text = it.first, fontSize = TextUnit(18f, TextUnitType.Sp))
-                },
-                trailingContent = {
-                    Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, contentDescription = "more")
-                },
-                modifier = Modifier
-                    .clickable {
-                        navController.navigate(it.second)
-                    }
-                    .padding(start = 10.dp, end = 10.dp, bottom = 5.dp)
-            )
-        }
-    }
+fun SystemuiScreen(onNavigate: (String) -> Unit) {
+    ListNavigationScreen(
+        title = stringResource(id = R.string.system_systemui),
+        items = RouterCons.getSystemUiList(),
+        onNavigate = onNavigate
+    )
 }

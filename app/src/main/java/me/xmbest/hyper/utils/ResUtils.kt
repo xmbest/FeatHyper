@@ -5,7 +5,7 @@ import me.xmbest.hyper.App
 
 object ResUtils {
     @JvmStatic
-    fun getInstance():Context = App.getInstance()
+    fun getContext(): Context = App.getInstance()
 
-    fun getString(rid:Int) = getInstance().resources.getString(rid)
+    fun getString(rid: Int) = getContext().resources.getString(rid)
 }

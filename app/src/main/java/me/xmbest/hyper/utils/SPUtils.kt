@@ -1,103 +1,74 @@
-package me.xmbest.hyper.utils;
+package me.xmbest.hyper.utils
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Log;
+import android.annotation.SuppressLint
+import android.content.Context
+import android.content.SharedPreferences
+import android.util.Log
+import me.xmbest.hyper.BuildConfig
 
+/**
+ * SharedPreferences 工具类
+ * 使用 MODE_WORLD_READABLE 以支持 Xposed 跨进程读取
+ */
+object SPUtils {
+    private const val TAG = "SPUtils"
+    const val mPrefsName = "hyper_prefs"
 
-public class SPUtils {
-
-    private final String TAG = "SPUtils";
-    public static SPUtils xsp;
-    public SharedPreferences sp;
-
-    public static String mPrefsName = "hyper_prefs";
-
-    private SPUtils() {
-
-    }
-
-    public static synchronized SPUtils getInstance() {
-        if (xsp == null) {
-            xsp = new SPUtils();
-        }
-        return xsp;
-    }
+    private var sp: SharedPreferences? = null
 
     /**
      * 初始化
-     *
-     * @param context
+     * @return true 初始化成功，false 初始化失败
      */
     @SuppressLint("WorldReadableFiles")
-    public boolean init(Context context) {
-        try {
-            Log.d(TAG,"set Context.MODE_WORLD_READABLE");
-            // MODE_WORLD_READABLE 过时了,如果没有在xposed中被启用会crash
-            sp = context.getSharedPreferences(mPrefsName, Context.MODE_WORLD_READABLE);
-            return true;
-        }catch (Exception e){
-            Log.d(TAG,"e.message = " + e.getMessage());
-//            sp = context.getSharedPreferences(mPrefsName,Context.MODE_PRIVATE);
-            return false;
+    fun init(context: Context): Boolean {
+        return try {
+            if (BuildConfig.DEBUG) Log.d(TAG, "set Context.MODE_WORLD_READABLE")
+            sp = context.getSharedPreferences(mPrefsName, Context.MODE_WORLD_READABLE)
+            true
+        } catch (e: Exception) {
+            if (BuildConfig.DEBUG) Log.d(TAG, "init failed: ${e.message}")
+            false
         }
     }
 
-    /**
-     * 下面的是读取数据
-     *
-     * @param key
-     * @param def
-     * @return
-     */
-    public static String getString(String key, String def) {
-        return SPUtils.getInstance().sp.getString(key, def);
+    fun getString(key: String?, def: String): String {
+        return sp?.getString(key, def) ?: def
     }
 
-    public static int getInt(String key, int def) {
-        return SPUtils.getInstance().sp.getInt(key, def);
+    fun getInt(key: String?, def: Int): Int {
+        return sp?.getInt(key, def) ?: def
     }
 
-    public static float getFloat(String key, float def) {
-        return SPUtils.getInstance().sp.getFloat(key, def);
+    fun getFloat(key: String?, def: Float): Float {
+        return sp?.getFloat(key, def) ?: def
     }
 
-    public static long getLong(String key, long def) {
-        return SPUtils.getInstance().sp.getLong(key, def);
+    fun getLong(key: String?, def: Long): Long {
+        return sp?.getLong(key, def) ?: def
     }
 
-    public static boolean getBoolean(String key, boolean def) {
-        return SPUtils.getInstance().sp.getBoolean(key, def);
+    fun getBoolean(key: String?, def: Boolean): Boolean {
+        return sp?.getBoolean(key, def) ?: def
     }
 
-    /**
-     * 下面是保存数据
-     *
-     * @param key
-     * @param v
-     * @return
-     */
-    public static boolean setString(String key, String v) {
-        return SPUtils.getInstance().sp.edit().putString(key, v).commit();
+    fun setString(key: String?, v: String) {
+        sp?.edit()?.putString(key, v)?.apply()
     }
 
-    public static boolean setInt(String key, int v) {
-        return SPUtils.getInstance().sp.edit().putInt(key, v).commit();
+    fun setInt(key: String?, v: Int) {
+        sp?.edit()?.putInt(key, v)?.apply()
     }
 
-    public static boolean setBoolean(String key, boolean v) {
-        return SPUtils.getInstance().sp.edit().putBoolean(key, v).commit();
+    fun setBoolean(key: String?, v: Boolean) {
+        sp?.edit()?.putBoolean(key, v)?.apply()
     }
 
-    public static boolean setFloat(String key, float v) {
-        return SPUtils.getInstance().sp.edit().putFloat(key, v).commit();
+    fun setFloat(key: String?, v: Float) {
+        sp?.edit()?.putFloat(key, v)?.apply()
     }
 
-    public static boolean setLong(String key, long v) {
-        return SPUtils.getInstance().sp.edit().putLong(key, v).commit();
+    fun setLong(key: String?, v: Long) {
+        sp?.edit()?.putLong(key, v)?.apply()
     }
-
-
 }
-

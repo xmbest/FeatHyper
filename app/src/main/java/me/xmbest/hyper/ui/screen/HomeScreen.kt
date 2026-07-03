@@ -9,40 +9,34 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavHostController
 import me.xmbest.hyper.ui.widget.AppItem
 import me.xmbest.hyper.R
-import me.xmbest.hyper.vm.HomeViewModule
+import me.xmbest.hyper.vm.HomeViewModel
 
 /**
  * 首页
  */
 @Composable
-fun HomeScreen(navController: NavHostController, viewModule: HomeViewModule = viewModel()) {
+fun HomeScreen(onNavigate: (String) -> Unit, viewModel: HomeViewModel = viewModel()) {
     Column {
         Text(
             text = stringResource(R.string.app_list),
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth(),
-            fontStyle = FontStyle.Normal,
             fontWeight = FontWeight.Bold,
-            fontSize = TextUnit(28f, TextUnitType.Sp),
+            fontSize = 28.sp,
         )
         LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
+            modifier = Modifier.fillMaxWidth()
         ) {
-            items(viewModule.getPackageNameList()){
-                AppItem(navController,it)
+            items(viewModel.getPackageNameList(), key = { it }) { packageName ->
+                AppItem(onNavigate = onNavigate, packageName = packageName)
             }
         }
     }
-
 }

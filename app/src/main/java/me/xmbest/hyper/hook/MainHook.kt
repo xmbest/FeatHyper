@@ -12,22 +12,23 @@ import me.xmbest.hyper.annotations.HookMethod
 import me.xmbest.hyper.annotations.HookModule
 import me.xmbest.hyper.utils.SPUtils
 import me.xmbest.hyper.utils.XSPUtils
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * hook入口类
  * @author xmbest
  * @date 2024/09/13
  */
-
 class MainHook : IXposedHookZygoteInit, IXposedHookLoadPackage {
     private val TAG: String = "MainHook"
 
     companion object {
-        val mHookClassMap = HashMap<String, Class<*>>()
+        private const val HOOK_MODULE_PACKAGE = "me.xmbest.hyper.hook.module"
+        val mHookClassMap = ConcurrentHashMap<String, Class<*>>()
     }
 
     override fun initZygote(startupParam: IXposedHookZygoteInit.StartupParam?) {
-        Log.d(TAG, "initZygote")
+        if (BuildConfig.DEBUG) Log.d(TAG, "initZygote")
         initXSharedPreferences()
         startupParam?.let {
             loadHookClass(it)
@@ -35,24 +36,20 @@ class MainHook : IXposedHookZygoteInit, IXposedHookLoadPackage {
     }
 
     override fun handleLoadPackage(lpParam: XC_LoadPackage.LoadPackageParam?) {
-        lpParam?.let {
-            Log.d(TAG, "handleLoadPackage: packageName = ${lpParam.packageName}")
-            if (mHookClassMap.keys.contains(lpParam.packageName)) {
-                val clz = mHookClassMap[lpParam.packageName]
-                clz?.let {
-                    val methods = clz.methods
-                    methods.forEach {
-                        val annotation = it.getAnnotation(HookMethod::class.java)
-                        if (annotation != null) {
-                            Log.d(
-                                TAG,
-                                "annotation.value = ${annotation.value},annotation.defaultEnable = ${annotation.defaultEnable}"
-                            )
-                            val instance = clz.getDeclaredConstructor().newInstance()
-                            if (XSPUtils.getBoolean(annotation.value,annotation.defaultEnable)){
-                                it.invoke(instance, lpParam)
-                            }
-                        }
+        lpParam?.let { loadPkg ->
+            if (BuildConfig.DEBUG) Log.d(TAG, "handleLoadPackage: packageName = ${loadPkg.packageName}")
+            val clz = mHookClassMap[loadPkg.packageName] ?: return
+            clz.methods.forEach { method ->
+                val annotation = method.getAnnotation(HookMethod::class.java) ?: return@forEach
+                if (BuildConfig.DEBUG) {
+                    Log.d(TAG, "annotation.value = ${annotation.value}, annotation.defaultEnable = ${annotation.defaultEnable}")
+                }
+                if (XSPUtils.getBoolean(annotation.value, annotation.defaultEnable)) {
+                    runCatching {
+                        val instance = clz.getDeclaredConstructor().newInstance()
+                        method.invoke(instance, loadPkg)
+                    }.onFailure {
+                        if (BuildConfig.DEBUG) Log.e(TAG, "Failed to invoke hook: ${method.name}", it)
                     }
                 }
             }
@@ -62,9 +59,8 @@ class MainHook : IXposedHookZygoteInit, IXposedHookLoadPackage {
     /**
      * 初始化XSharedPreferences
      */
-    private fun initXSharedPreferences(){
-        XSPUtils.initXSP(BuildConfig.APPLICATION_ID,
-            SPUtils.mPrefsName)
+    private fun initXSharedPreferences() {
+        XSPUtils.initXSP(BuildConfig.APPLICATION_ID, SPUtils.mPrefsName)
     }
 
     /**
@@ -73,29 +69,31 @@ class MainHook : IXposedHookZygoteInit, IXposedHookLoadPackage {
      */
     private fun loadHookClass(startupParam: IXposedHookZygoteInit.StartupParam) {
         if (mHookClassMap.isEmpty()) {
-            val pathClassLoader =
-                PathClassLoader(startupParam.modulePath, ClassLoader.getSystemClassLoader())
-            val pathList = XposedHelpers.getObjectField(pathClassLoader, "pathList")
-            val dexElements = XposedHelpers.getObjectField(pathList, "dexElements") as Array<*>
-            var dexFile: DexFile? = null
-            for (element in dexElements) {
-                dexFile = XposedHelpers.getObjectField(element, "dexFile") as DexFile
-            }
-            if (dexFile != null) {
-                val enumeration = dexFile.entries()
-                while (enumeration.hasMoreElements()) {
-                    val className = enumeration.nextElement()
-                    if (!className.contains("$") && className.contains("me.xmbest.hyper.hook.module")) {
-                        val cls = Class.forName(className)
-                        val annotation = cls.getAnnotation(HookModule::class.java)
-                        annotation?.let {
-                            mHookClassMap[it.packageName] = cls
+            runCatching {
+                val pathClassLoader =
+                    PathClassLoader(startupParam.modulePath, ClassLoader.getSystemClassLoader())
+                val pathList = XposedHelpers.getObjectField(pathClassLoader, "pathList")
+                val dexElements = XposedHelpers.getObjectField(pathList, "dexElements") as Array<*>
+                for (element in dexElements) {
+                    val dexFile = XposedHelpers.getObjectField(element, "dexFile") as DexFile
+                    val enumeration = dexFile.entries()
+                    while (enumeration.hasMoreElements()) {
+                        val className = enumeration.nextElement()
+                        if (!className.contains("$") && className.contains(HOOK_MODULE_PACKAGE)) {
+                            runCatching {
+                                val cls = Class.forName(className)
+                                val annotation = cls.getAnnotation(HookModule::class.java)
+                                annotation?.let {
+                                    mHookClassMap[it.packageName] = cls
+                                }
+                            }
                         }
                     }
                 }
+            }.onFailure {
+                if (BuildConfig.DEBUG) Log.e(TAG, "Failed to load hook classes", it)
             }
-            Log.d(TAG, "mHookClassMap = $mHookClassMap")
+            if (BuildConfig.DEBUG) Log.d(TAG, "mHookClassMap = $mHookClassMap")
         }
     }
-
 }
