@@ -11,6 +11,8 @@
     <string name="system_systemui">用户界面</string>
     <string name="system_systemui_enable_lock_show_sim">锁屏显示运营商名称</string>
     <string name="settings_device_info">设备信息</string>
+    <string name="systemui_material">材质</string>
+    <string name="systemui_force_soft_light_glass">强制启用柔光玻璃</string>
     <string name="systemui_status_bar">状态栏</string>
     <string name="more">更多</string>
 </resources>

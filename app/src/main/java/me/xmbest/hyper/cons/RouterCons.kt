@@ -7,6 +7,7 @@ import me.xmbest.hyper.ui.screen.HomeScreen
 import me.xmbest.hyper.ui.screen.SettingsDeviceInfoScreen
 import me.xmbest.hyper.ui.screen.SettingsScreen
 import me.xmbest.hyper.ui.screen.SystemuiLockScreen
+import me.xmbest.hyper.ui.screen.SystemuiMaterialScreen
 import me.xmbest.hyper.ui.screen.SystemuiScreen
 import me.xmbest.hyper.utils.ResUtils
 
@@ -29,6 +30,11 @@ object RouterCons {
     private const val SYSTEMUI_LOCK = "SYSTEMUI_LOCK"
 
     /**
+     * 材质-柔光玻璃
+     */
+    private const val SYSTEMUI_MATERIAL = "SYSTEMUI_MATERIAL"
+
+    /**
      * 系统设置
      */
     private const val SETTINGS = "com.android.settings"
@@ -47,6 +53,9 @@ object RouterCons {
             RouterPage(SYSTEMUI) { SystemuiScreen(onNavigate = { navController.navigate(it) }) },
             RouterPage(SYSTEMUI_LOCK) {
                 SystemuiLockScreen(onBack = { navController.popBackStack() })
+            },
+            RouterPage(SYSTEMUI_MATERIAL) {
+                SystemuiMaterialScreen(onBack = { navController.popBackStack() })
             },
             RouterPage(SETTINGS) { SettingsScreen(onNavigate = { navController.navigate(it) }) },
             RouterPage(SETTINGS_DEVICE_INFO) {
@@ -69,7 +78,8 @@ object RouterCons {
      */
     fun getSystemUiList(): List<Pair<String, String>> {
         return listOf(
-            Pair(ResUtils.getString(R.string.systemui_lock), SYSTEMUI_LOCK)
+            Pair(ResUtils.getString(R.string.systemui_lock), SYSTEMUI_LOCK),
+            Pair(ResUtils.getString(R.string.systemui_material), SYSTEMUI_MATERIAL)
         )
     }
 }
